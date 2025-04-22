@@ -14,7 +14,7 @@ class Contact(BaseModel):
 
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str = Field(..., min_length=1, max_length=100)
-    phone: constr(regex=r"^\+\d{7,15}$")
+    phone: constr(pattern=r'^\+\d{7,15}$')
     email: Optional[EmailStr] = None
 
 
