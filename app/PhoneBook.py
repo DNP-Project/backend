@@ -46,6 +46,13 @@ class PhoneBook:
             logger.debug("GetByName '%s' -> %d records", name, len(contacts))
             return contacts
 
+    async def get_all(self) -> Dict[str, List[str]]:
+        async with self._lock:
+            result: Dict[str, List[str]] = {}
+            for name, ids in self._by_name.items():
+                result[name] = [self._by_id[i].phone for i in ids]
+            return result
+
     async def update(self, id: str, name: str, phone: str, email: Optional[str] = None) -> Contact:
         async with self._lock:
             if id not in self._by_id:

@@ -35,12 +35,14 @@ tests/
 
 ### JSON‑RPC API
 
-| Method            | Params                                              | Result / Error |
-|-------------------|-----------------------------------------------------|----------------|
-| **AddContact**    | `name:str`, `phone:str`, `email:str\|null`          | `Contact`      |
-| **GetByName**     | `name:str`                                          | `Contact[]`    |
-| **UpdateContact** | `id:str`, `name:str`, `phone:str`, `email:str|null` | `Contact`      |
-| **DeleteContact** | `id:str`                                            | `null`         |
+
+| Method             | Params                                              | Result / Error                  |
+|--------------------|-----------------------------------------------------|---------------------------------|
+| **AddContact**     | `name:str`, `phone:str`, `email:str\|null`         | `Contact`                       |
+| **GetByName**      | `name:str`                                          | `Contact[]`                     |
+| **GetAllContacts** | _none_                                              | `Dict[str, List[str]]`          |
+| **UpdateContact**  | `id:str`, `name:str`, `phone:str`, `email:str\|null` | `Contact`                       |
+| **DeleteContact**  | `id:str`                                            | `null`                          |
 
 > *All phone numbers must match E.164: `+` and 7–15 digits.*  
 > Duplicate (`name + phone`) raises `"code":‑32602`.
@@ -97,6 +99,16 @@ tests/
     "id": "<CONTACT_ID>"
   },
   "id": 4
+}
+```
+
+**5. Get all contacts:**
+```json
+{
+  "jsonrpc":"2.0",
+  "method":"GetAllContacts",
+  "params":{},
+  "id":5
 }
 ```
 

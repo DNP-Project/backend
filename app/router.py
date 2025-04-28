@@ -17,8 +17,8 @@ async def _json_success(result: Any, id_: Optional[str]) -> Dict[str, Any]:
 
 
 AUTHORISATION_ERROR_CODES = {
-    KeyError: (-32602, "Not found"),
-    ValueError: (-32602, "Invalid params"),
+    KeyError:   (-32602, "Not found"),
+    ValueError: (-32602, None),
 }
 
 
@@ -58,6 +58,10 @@ async def rpc_entrypoint(request: Request) -> Dict[str, Any]:
             await phonebook.delete(params["id"])
             resp = await _json_success(None, id_)
 
+        elif method == "GetAllContacts":
+            all_contacts = await phonebook.get_all()
+            resp = await _json_success(all_contacts, id_)
+
         else:
             resp = {"jsonrpc": "2.0", "error": {"code": -32601, "message": f"Unknown method {method!r}"}, "id": id_}
 
@@ -65,7 +69,12 @@ async def rpc_entrypoint(request: Request) -> Dict[str, Any]:
         return resp
 
     except Exception as exc:
-        code, message = AUTHORISATION_ERROR_CODES.get(type(exc), (-32000, str(exc)))
-        resp = {"jsonrpc": "2.0", "error": {"code": code, "message": message}, "id": id_}
+        code, default_msg = AUTHORISATION_ERROR_CODES.get(type(exc), (-32000, None))
+        message = default_msg if default_msg is not None else str(exc)
+        resp = {
+                "jsonrpc": "2.0",
+                "error": {"code": code, "message": message},
+                "id": id_,
+        }
         log.warning("! %s -> %s", method, message)
         return resp
