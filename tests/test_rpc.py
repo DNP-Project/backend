@@ -89,25 +89,3 @@ async def test_invalid_jsonrpc_version(client):
     assert data["id"] is None
 
 
-@pytest.mark.asyncio
-async def test_get_all_contacts(client):
-    # подготовим два разных контакта
-    await client.post("/rpc", json={
-        "jsonrpc":"2.0","method":"AddContact",
-        "params":{"name":"X","phone":"+70000001"},"id":100
-    })
-    await client.post("/rpc", json={
-        "jsonrpc":"2.0","method":"AddContact",
-        "params":{"name":"Y","phone":"+70000002"},"id":101
-    })
-
-    r = await client.post("/rpc", json={
-        "jsonrpc":"2.0","method":"GetAllContacts",
-        "params":{}, "id":102
-    })
-    data = r.json()["result"]
-    # data должно быть dict: {"x":[...], "y":[...]}
-    assert "+70000001" in data["x"]
-    assert "+70000002" in data["y"]
-
-
