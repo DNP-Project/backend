@@ -8,8 +8,6 @@ Built with **FastAPI & Pydantic v2** and fewer than 100 SLOC of business code.
 ### Quick start
 
 ```bash
-git clone https://github.com/your‑org/phonebook‑rpc.git
-cd phonebook‑rpc
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload      # http://127.0.0.1:5000
@@ -134,14 +132,6 @@ TOTAL                125      0   100%
 ```
 
 *pytest‑asyncio strict‑mode; race‑conditions checked with 50 parallel `add`.*
-
----
-
-### Why JSON‑RPC instead of REST?
-
-* single `/rpc` endpoint; method name lives in the payload  
-* symmetrical request / response with formal spec (OpenRPC‑ready)  
-* thin ~20‑line dispatcher, **no** external dependency (`fastapi-jsonrpc` not required)  
 
 ---
 
