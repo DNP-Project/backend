@@ -8,8 +8,6 @@ Built with **FastAPI & Pydantic v2** and fewer than 100 SLOC of business code.
 ### Quick start
 
 ```bash
-git clone https://github.com/your‑org/phonebook‑rpc.git
-cd phonebook‑rpc
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\\Scripts\\activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload      # http://127.0.0.1:5000
@@ -35,12 +33,14 @@ tests/
 
 ### JSON‑RPC API
 
-| Method            | Params                                              | Result / Error |
-|-------------------|-----------------------------------------------------|----------------|
-| **AddContact**    | `name:str`, `phone:str`, `email:str\|null`          | `Contact`      |
-| **GetByName**     | `name:str`                                          | `Contact[]`    |
-| **UpdateContact** | `id:str`, `name:str`, `phone:str`, `email:str|null` | `Contact`      |
-| **DeleteContact** | `id:str`                                            | `null`         |
+
+| Method             | Params                                              | Result / Error                  |
+|--------------------|-----------------------------------------------------|---------------------------------|
+| **AddContact**     | `name:str`, `phone:str`, `email:str\|null`         | `Contact`                       |
+| **GetByName**      | `name:str`                                          | `Contact[]`                     |
+| **GetAllContacts** | _none_                                              | `Dict[str, List[str]]`          |
+| **UpdateContact**  | `id:str`, `name:str`, `phone:str`, `email:str\|null` | `Contact`                       |
+| **DeleteContact**  | `id:str`                                            | `null`                          |
 
 > *All phone numbers must match E.164: `+` and 7–15 digits.*  
 > Duplicate (`name + phone`) raises `"code":‑32602`.
@@ -100,6 +100,16 @@ tests/
 }
 ```
 
+**5. Get all contacts:**
+```json
+{
+  "jsonrpc":"2.0",
+  "method":"GetAllContacts",
+  "params":{},
+  "id":5
+}
+```
+
 ---
 
 ### Running the tests
@@ -122,14 +132,6 @@ TOTAL                125      0   100%
 ```
 
 *pytest‑asyncio strict‑mode; race‑conditions checked with 50 parallel `add`.*
-
----
-
-### Why JSON‑RPC instead of REST?
-
-* single `/rpc` endpoint; method name lives in the payload  
-* symmetrical request / response with formal spec (OpenRPC‑ready)  
-* thin ~20‑line dispatcher, **no** external dependency (`fastapi-jsonrpc` not required)  
 
 ---
 
